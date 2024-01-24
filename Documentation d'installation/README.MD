@@ -4,15 +4,13 @@
 
 <hr style="border:3px solid black">
 
-
-
 La configuration de notre projet nécessite de configurer sur le server de l'école. On a **8** machines pour réaliser cette fonction:
 
 - **2 Masters** ;
 
 - **6 Slaves (ou Workers)**  qui sont utiliser pour stoquer des données;
-
-
+  
+  
 
 Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé comptable. On a installé **3 Zookeepers** pour contrôler des **deux masters** et **1 worker** pour assurer la résilience de nos travailles 
 
@@ -34,11 +32,11 @@ Notre documentation est organisée dans l'ordre suivant:
 
 
 
-<hr style="border:3px solid black">
+****
+
+
 
 <h2 align="left">1.Lancer le cluster et y accéder</h2>
-
-****
 
 ### 1.1 Connecter cluster
 
@@ -75,5 +73,3 @@ ssh ubuntu@(ip de machine)
 <hr style="border:3px solid black">
 
 <h2 align="left">2.Configuration de JAVA et Python</h2>
-
-

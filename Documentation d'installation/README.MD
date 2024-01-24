@@ -12,7 +12,7 @@ La configuration de notre projet nécessite de configurer sur le server de l'éc
   
   
 
-Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé comptable. On a installé **3 Zookeepers** pour contrôler des **deux masters** et **1 worker** pour assurer la résilience de nos travailles 
+Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé compatible. On a installé **3 Zookeepers** pour contrôler des **deux masters** et **1 worker** pour assurer la résilience de nos travailles 
 
 
 
@@ -29,8 +29,8 @@ Notre documentation est organisée dans l'ordre suivant:
 5. Installation et configuration de Appache Zookeeper sur  **2** Masters et **1** Worker
 
 6. Installation et configuration de Appache Zeppelin sur **2** Masters
-
-
+   
+   
 
 ****
 
@@ -38,7 +38,7 @@ Notre documentation est organisée dans l'ordre suivant:
 
 <h2 align="left">1.Lancer le cluster et y accéder</h2>
 
-### 1.1 Connecter cluster
+#### 1.1 Connecter cluster
 
 L'école nous a distribué 8 VMs pour configurer. Pour connecter, taper code sur terminal (Lunix):
 
@@ -48,9 +48,7 @@ ssh ubuntu@ip_server && ssh tp-hadoop-(Numéro de machine)
 
 
 
-
-
-### 1.2 Création de clé public
+#### 1.2 Création de clé public
 
 Cette étape pour l'interconnexion parmi des machines. 
 
@@ -60,7 +58,9 @@ ssh-keygen -t rsa -b 4096
 
 Notez que la clé doit être créée dans un fichier (**.ssh**). Une fois créée, tapez (**cat id_rsa.pub**) dans le même répertoire de fichiers pour obtenir la clé publique, et copiez cette clé publique dans le fichier de clés publiques (**authorizedkey**) des **7** autres machines.
 
-### 1.3 l'ajout de IPs
+
+
+#### 1.3 l'ajout de IPs
 
 Afin de garantir une connexion fluide entre les machines à un stade ultérieur, vous devez copier l'adresse IP de chaque machine sous le fichier (**/home/ubuntu/etc/hosts**).
 
@@ -70,6 +70,44 @@ Pour vérifier que la connexion a réussi, vous pouvez saisir le code :
 ssh ubuntu@(ip de machine)
 ```
 
-<hr style="border:3px solid black">
+
+
+****
 
 <h2 align="left">2.Configuration de JAVA et Python</h2>
+
+#### 2.1 Installer Java
+
+L'installation de Java est cruciale. Il s'agit de l'environnement de travail du logiciel pour ce projet. Avant l'installation, il faut vérifier comptabilité des logiciels. Pous nous, on a choisi **java 8**:
+
+```bash
+sudo apt-get update && sudo apt-get upgrade && sudo apt-get install openjdk-8-jdk
+```
+
+Les deux premières commandes sont des commandes de mise à jour du système. Si le système est nouveaux, vous n'avez pas besoin d'exécuter.
+
+
+
+#### 2.2 Installer Python
+
+Python peut être installé après l'installation de cassandra, car il nécessite des logiciels compatibles. S'il n'y a pas d'exigence de compatibilité, vous pouvez l'indiquer :
+
+```bash
+sudo apt install python
+```
+
+
+
+****
+
+<h2 align="left">3.Installation et configuration de Cassandra</h2>
+
+#### 3.1 Installer Cassandra
+
+Encore une fois, un rappel:vous devez vous assurer de la compatibilité des logiciels avant de les installer, faute de quoi vous passerez beaucoup de temps à chercher une solution au problème. Pour nous,  on a choisi **Cassandra 3.11.3** , dans le site de [appache cassandra]([Apache Download Mirrors](https://www.apache.org/dyn/closer.lua/cassandra/3.11.3/)):
+
+```bash
+cd /home/ubuntu/ && wget http://archive.apache.org/dist/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz
+```
+
+

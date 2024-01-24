@@ -122,13 +122,17 @@ Encore une fois, un rappel:vous devez vous assurer de la compatibilité des logi
 cd /home/ubuntu/ && wget http://archive.apache.org/dist/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz && tar -xzvf apache-cassandra-3.11.3-bin.tar.gz
 ```
 
-Si besoin, vous pouvez suprrimer le fichier de gz :
+Si besoin, vous pouvez supprimer le fichier de gz :
 
 ```bash
 rm -r apache-cassandra-3.11.3-bin.tar.gz
 ```
 
+Ensuite, vous devez ajouter le chemin d'cassandra à la variable d'environnement(**.barshrc**)
 
+```bash
+export PATH="$PATH:/home/ubuntu/apache-cassandra-3.11.3/bin"
+```
 
 #### 3.2 Configurer cassandra fichier <u>Cassandra.ymal</u>
 
@@ -156,7 +160,7 @@ seed_provider:
       parameters:
           # seeds is actually a comma-delimited list of addresses.
           # Ex: "<ip1>,<ip2>,<ip3>"
-          - seeds: "tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-23,tp-hadoop-24"
+          - seeds: "tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24"
 
 listen_address: tp-hadoop-17
 rpc_address: 0.0.0.0
@@ -196,30 +200,82 @@ done
 
 <h2 align="left">4.Installation et configuration de Spark</h2>
 
+ Un rappel, les étapes suivant pour réaliser la fonction cluster :
+
+1. Installer Apache-SparK sur les Masters et Workers
+
+2. Configurer le fichier **spark-env.sh**
+
+3. Configurer le fichier **spark-default.conf**
+
+4. Ajouter les dépendances pour connecter Spark et Cassandra
+
+5. Lancer les Masters et les Workers
+
 #### 4.1 Installer Spark
 
-  
+  Pour installation, on a choisi **Spark 2.3.2** , Vous pouvez chercher des vesion qui est compatible sur le [site](https://archive.apache.org/dist/spark/spark-2.3.2/) .
+
+```bash
+cd /home/ubuntu && wget https://archive.apache.org/dist/spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz && tar -xzvf spark-2.3.2-bin-hadoop2.7.tgz && rm spark-2.3.2-bin-hadoop2.7.tgz
+```
+
+Ensuite, vous devez ajouter le chemin d'Spark à la variable d'environnement(**.barshrc**)
+
+```bash
+export SPARK_HOME=/home/ubuntu/spark-2.3.2-bin-hadoop2.7
+export PATH=$PATH:$SPARK_HOME/bin
+```
+
+#### 4.2 Configurer le fichier *<u>spark-env.sh</u>*
+
+Accéder au dossier(**/home/ubuntu/spark-2.3.2-bin-hadoop2.7/conf**), Copier `spark-env.sh.template` et `spark-defaults.conf.template` en `spark-env.sh` et `spark-defaults.conf` . 
+
+```bash
+cd /home/ubunut/spark-2.3.2-bin-hadoop2.7/conf && cp spark-env.sh.template spark-env.sh && cp spark-defaults.conf.template spark-defaults.conf
+```
+
+Sur masters:
+
+```bash
+export SPARK_LOCAL_IP=IP De master
+export SPARK_MASTER_HOST=IP De master
+export SPARK_MASTER_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=tp-ha>
+```
+
+Sur workers:
+
+```bash
+export SPARK_LOCAL_IP=ip de worker
+export SPARK_MASTER_HOST=IPs de masters
+```
 
 
 
+#### 4.3 Configurer le fichier *<u>spark-defaults.conf</u>*
 
+Sur des machines:
 
+```bash
+spark.master                        spark://tp-hadoop-21:7077,tp-hadoop-22:7077
+spark.jars                          /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars/spark-cassandra-connector_2.11-2.4.0.jar
+spark.cassandra.connection.host     tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24
+```
 
+On peut résumer:
 
+- `spark.master` : spark://PRIVATE_DNS_MASTER1:7077,PRIVATE_DNS_MASTER2:7077
 
+- `spark.jars` : spark-cassandra-connector_2.11-2.4.0
 
+- `spark.cassandra.connection.host` : IPs de workers
+  
+  
 
+#### 4.4 Installer Spark-cassandra-connector
 
-
-
-
-
-
-
-
-
-
-
-
+```bash
+cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars && wget https://repo1.maven.org/maven2/com/twitter/jsr166e/1.1.0/jsr166e-1.1.0.jar && wget https://repo1.maven.org/maven2/com/datastax/spark/spark-cassandra-connector_2.11/2.4.0/spark-cassandra-connector_2.11-2.4.0.jar
+```
 
 

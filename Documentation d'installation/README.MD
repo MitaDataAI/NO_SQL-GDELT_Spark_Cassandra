@@ -86,7 +86,19 @@ sudo apt-get update && sudo apt-get upgrade && sudo apt-get install openjdk-8-jd
 
 Les deux premières commandes sont des commandes de mise à jour du système. Si le système est nouveaux, vous n'avez pas besoin d'exécuter.
 
+Ensuite, vous devez ajouter le chemin d'accès à java à la variable d'environnement(**.barshrc**).
 
+```bash
+java -XshowSettings:properties -version # properties java
+```
+
+Le code ci-dessus permet de trouver le chemin d'accès à l'installation de Java.
+
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+```
+
+ Après l'avoir ajouté à la variable d'environnement, vous pouvez le vérifier en exécutant (**echo $$JAVA_HOME**).
 
 #### 2.2 Installer Python
 
@@ -104,10 +116,110 @@ sudo apt install python
 
 #### 3.1 Installer Cassandra
 
-Encore une fois, un rappel:vous devez vous assurer de la compatibilité des logiciels avant de les installer, faute de quoi vous passerez beaucoup de temps à chercher une solution au problème. Pour nous,  on a choisi **Cassandra 3.11.3** , dans le site de [appache cassandra]([Apache Download Mirrors](https://www.apache.org/dyn/closer.lua/cassandra/3.11.3/)):
+Encore une fois, un rappel:vous devez vous assurer de la compatibilité des logiciels avant de les installer, faute de quoi vous passerez beaucoup de temps à chercher une solution au problème. Pour nous,  on a choisi **Cassandra 3.11.3** , dans le site de [site Apache Cassandra](http://www.apache.org/dyn/closer.lua/cassandra/3.11.3/) :
 
 ```bash
-cd /home/ubuntu/ && wget http://archive.apache.org/dist/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz
+cd /home/ubuntu/ && wget http://archive.apache.org/dist/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz && tar -xzvf apache-cassandra-3.11.3-bin.tar.gz
 ```
+
+Si besoin, vous pouvez suprrimer le fichier de gz :
+
+```bash
+rm -r apache-cassandra-3.11.3-bin.tar.gz
+```
+
+
+
+#### 3.2 Configurer cassandra fichier <u>Cassandra.ymal</u>
+
+  Pour activer la mise en cluster entre les nœuds, il faut configurer fichier(**<u>Cassandra.ymal</u>**). Dans le fichier, nous devons modifier des lignes suivant:
+
+- **cluster_name** : nom de cluster(par defauct "Test Cluster")
+
+- **seed_provider** : IPs de machines qui doivent faire le cluster
+
+- **listen_address** : IP de machine actuelle qui laisse cluster trouve le noeud.
+
+- **rpc_address** : 0.0.0.0 (ici, on peut mettre l'ip de machine actuelle, mais pour les connexions de cassandra, il faut ajouter ip après **cqlsh**)
+
+- **broadcast_rpc_address** : 1.2.3.4(quand rpc_address est 0.0.0.0, il faut ajouter ce lignes, sinon, commenter cette ligne)
+
+```
+cluster_name: 'Test Cluster'
+
+seed_provider:
+    # Addresses of hosts that are deemed contact points. 
+    # Cassandra nodes use this list of hosts to find each other and learn
+    # the topology of the ring.  You must change this if you are running
+    # multiple nodes!
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+          # seeds is actually a comma-delimited list of addresses.
+          # Ex: "<ip1>,<ip2>,<ip3>"
+          - seeds: "tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-23,tp-hadoop-24"
+
+listen_address: tp-hadoop-17
+rpc_address: 0.0.0.0
+broadcast_rpc_addres:1.2.3.4
+```
+
+Lorsque nous avons fini de configurer une machine, nous pouvons utiliser la commande **scp** pour la copier sur une autre machine.
+
+```bash
+    scp /home/ubuntu/apache-cassandra-3.11.3/conf/cassandra.yaml ubuntu@$node:/home/ubuntu/apache-cassandra-3.11.3/conf/
+```
+
+Grâce à la connexion entre les machines, nous pouvons écrire des fichiers **sh** pour un déploiement en un clic.
+
+```bash
+!/bin/bash
+# Liste des noms d'hôtes ou adresses IP des nœuds
+nodes=("ip_1" "ip_2" "ip_3" "ip_4","ip_5")
+
+for node in "${nodes[@]}"; do
+    # Supprimer l'ancien fichier cassandra.yaml
+    ssh ubuntu@$node "rm /home/ubuntu/apache-cassandra-3.11.3/conf/cassandra.yaml"
+
+    # Copier le fichier de base cassandra.yaml vers le nœud
+    scp /home/ubuntu/apache-cassandra-3.11.3/conf/cassandra.yaml ubuntu@$node:/home/ubuntu/apache-cassandra-3.11.3/conf/
+
+    # Modifier le fichier cassandra.yaml sur le nœud
+    ssh ubuntu@$node "sed -i 's/listen_address:.*/listen_address: $node/' /home/ubuntu//home/ubuntu/apache-cassandra-3.11.3/conf/cassandra.yaml
+
+done
+
+```
+
+
+
+****
+
+<h2 align="left">4.Installation et configuration de Spark</h2>
+
+#### 4.1 Installer Spark
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

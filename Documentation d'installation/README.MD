@@ -12,7 +12,7 @@ La configuration de notre projet nécessite de configurer sur le server de l'éc
   
   
 
-Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé compatible. On a installé **3 Zookeepers** pour contrôler des **deux masters** et **1 worker** pour assurer la résilience de nos travailles 
+Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé compatible. On a installé **3 Zookeepers** sur **1 master** et **2 workers** pour assurer la résilience de nos travailles 
 
 
 
@@ -261,7 +261,7 @@ spark.master                        spark://tp-hadoop-21:7077,tp-hadoop-22:7077
 spark.jars                          /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars/spark-cassandra-connector_2.11-2.4.0.jar
 spark.cassandra.connection.host     tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24
 spark.deploy.recoveryMode           ZOOKEEPER
-spark.deploy.zookeeper.url          tp-hadoop-17:2181,tp-hadoop-18:2182,tp-hadoop-20:2183
+spark.deploy.zookeeper.url          tp-hadoop-22:2181,tp-hadoop-18:2182,tp-hadoop-20:2183
 ```
 
 Sur Workers:
@@ -285,6 +285,8 @@ Pour réaliser la résilience de système, il faut ajouter Deux lignes dans fich
 
 
 #### 4.4 Installer Spark-cassandra-connector
+
+
 
 ```bash
 cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars && wget https://repo1.maven.org/maven2/com/twitter/jsr166e/1.1.0/jsr166e-1.1.0.jar && wget https://repo1.maven.org/maven2/com/datastax/spark/spark-cassandra-connector_2.11/2.4.0/spark-cassandra-connector_2.11-2.4.0.jar

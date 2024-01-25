@@ -238,9 +238,9 @@ cd /home/ubunut/spark-2.3.2-bin-hadoop2.7/conf && cp spark-env.sh.template spark
 Sur masters:
 
 ```bash
-export SPARK_LOCAL_IP=IP De master
-export SPARK_MASTER_HOST=IP De master
-export SPARK_MASTER_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=tp-ha>
+export SPARK_LOCAL_IP=tp-hadoop-21 
+export SPARK_MASTER_HOST=tp-hadoop-21 
+export SPARK_MASTER_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=tp-hadoop-17:2181,tp-hadoop-18:2182,tp-hadoop-20:2183"
 ```
 
 Sur workers:
@@ -254,7 +254,17 @@ export SPARK_MASTER_HOST=IPs de masters
 
 #### 4.3 Configurer le fichier *<u>spark-defaults.conf</u>*
 
-Sur des machines:
+Sur Masters:
+
+```bash
+spark.master                        spark://tp-hadoop-21:7077,tp-hadoop-22:7077
+spark.jars                          /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars/spark-cassandra-connector_2.11-2.4.0.jar
+spark.cassandra.connection.host     tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24
+spark.deploy.recoveryMode           ZOOKEEPER
+spark.deploy.zookeeper.url          tp-hadoop-17:2181,tp-hadoop-18:2182,tp-hadoop-20:2183
+```
+
+Sur Workers:
 
 ```bash
 spark.master                        spark://tp-hadoop-21:7077,tp-hadoop-22:7077
@@ -269,8 +279,10 @@ On peut résumer:
 - `spark.jars` : spark-cassandra-connector_2.11-2.4.0
 
 - `spark.cassandra.connection.host` : IPs de workers
-  
-  
+
+Pour réaliser la résilience de système, il faut ajouter Deux lignes dans fichier de master. C'est pour quand un noeud de master est mort, le système va choisir automatiquement le deuxième masters à continuer de faire des tâches.
+
+
 
 #### 4.4 Installer Spark-cassandra-connector
 

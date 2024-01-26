@@ -38,7 +38,7 @@ Notre documentation est organisée dans l'ordre suivant:
 
 <h2 align="left">1.Lancer le cluster et y accéder</h2>
 
-#### 1.1 Connecter cluster
+### 1.1 Connecter cluster
 
 L'école nous a distribué 8 VMs pour configurer. Pour connecter, taper code sur terminal (Lunix):
 
@@ -48,7 +48,7 @@ ssh ubuntu@ip_server && ssh tp-hadoop-(Numéro de machine)
 
 
 
-#### 1.2 Création de clé public
+### 1.2 Création de clé public
 
 Cette étape pour l'interconnexion parmi des machines. 
 
@@ -60,7 +60,7 @@ Notez que la clé doit être créée dans un fichier (**.ssh**). Une fois créé
 
 
 
-#### 1.3 l'ajout de IPs
+### 1.3 l'ajout de IPs
 
 Afin de garantir une connexion fluide entre les machines à un stade ultérieur, vous devez copier l'adresse IP de chaque machine sous le fichier (**/home/ubuntu/etc/hosts**).
 
@@ -76,7 +76,7 @@ ssh ubuntu@(ip de machine)
 
 <h2 align="left">2.Configuration de JAVA et Python</h2>
 
-#### 2.1 Installer Java
+### 2.1 Installer Java
 
 L'installation de Java est cruciale. Il s'agit de l'environnement de travail du logiciel pour ce projet. Avant l'installation, il faut vérifier comptabilité des logiciels. Pous nous, on a choisi **java 8**:
 
@@ -100,7 +100,9 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
 
  Après l'avoir ajouté à la variable d'environnement, vous pouvez le vérifier en exécutant (**echo $$JAVA_HOME**).
 
-#### 2.2 Installer Python
+
+
+### 2.2 Installer Python
 
 Python peut être installé après l'installation de cassandra, car il nécessite des logiciels compatibles. S'il n'y a pas d'exigence de compatibilité, vous pouvez l'indiquer :
 
@@ -114,7 +116,9 @@ sudo apt install python
 
 <h2 align="left">3.Installation et configuration de Cassandra</h2>
 
-#### 3.1 Installer Cassandra
+
+
+### 3.1 Installer Cassandra
 
 Encore une fois, un rappel:vous devez vous assurer de la compatibilité des logiciels avant de les installer, faute de quoi vous passerez beaucoup de temps à chercher une solution au problème. Pour nous,  on a choisi **Cassandra 3.11.3** , dans le site de [site Apache Cassandra](http://www.apache.org/dyn/closer.lua/cassandra/3.11.3/) :
 
@@ -134,7 +138,9 @@ Ensuite, vous devez ajouter le chemin d'cassandra à la variable d'environnement
 export PATH="$PATH:/home/ubuntu/apache-cassandra-3.11.3/bin"
 ```
 
-#### 3.2 Configurer cassandra fichier <u>Cassandra.ymal</u>
+
+
+### 3.2 Configurer cassandra fichier <u>Cassandra.ymal</u>
 
   Pour activer la mise en cluster entre les nœuds, il faut configurer fichier(**<u>Cassandra.ymal</u>**). Dans le fichier, nous devons modifier des lignes suivant:
 
@@ -167,11 +173,15 @@ rpc_address: 0.0.0.0
 broadcast_rpc_addres:1.2.3.4
 ```
 
+
+
 Lorsque nous avons fini de configurer une machine, nous pouvons utiliser la commande **scp** pour la copier sur une autre machine.
 
 ```bash
     scp /home/ubuntu/apache-cassandra-3.11.3/conf/cassandra.yaml ubuntu@$node:/home/ubuntu/apache-cassandra-3.11.3/conf/
 ```
+
+
 
 Grâce à la connexion entre les machines, nous pouvons écrire des fichiers **sh** pour un déploiement en un clic.
 
@@ -194,7 +204,9 @@ done
 
 ```
 
-#### 3.3  Vérification de réussite
+
+
+### 3.3  Vérification de réussite
 
 Lancer cassandra dans des machines:
 
@@ -226,7 +238,9 @@ Un rappel, les étapes suivant pour réaliser la fonction cluster :
 
 4. Lancer le cluster
 
-#### 4.1 Installer Spark
+
+
+### 4.1 Installer Spark
 
   Pour installation, on a choisi **Spark 2.3.2** , Vous pouvez chercher des vesion qui est compatible sur le [site](https://archive.apache.org/dist/spark/spark-2.3.2/) .
 
@@ -241,7 +255,9 @@ export SPARK_HOME=/home/ubuntu/spark-2.3.2-bin-hadoop2.7
 export PATH=$PATH:$SPARK_HOME/bin
 ```
 
-#### 4.2 Configurer des fichiers.
+
+
+### 4.2 Configurer des fichiers.
 
 Accéder au dossier(**/home/ubuntu/spark-2.3.2-bin-hadoop2.7/conf**), Copier `spark-env.sh.template`,`slaves.template` et `spark-defaults.conf.template` en  `spark-env.sh` ,`slaves`  et  `spark-defaults.conf` . 
 
@@ -295,7 +311,7 @@ Quand avoir fini des configurations dans une machine, on peut copier et coller d
 
 
 
-#### 4.3 Installer Spark-cassandra-connector
+### 4.3 Installer Spark-cassandra-connector
 
 Cette librairie est pour la connexion entre Spark et Cassandra.
 
@@ -305,7 +321,7 @@ cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars && wget https://repo1.maven.org/m
 
 
 
-#### 4.4  Lancer le cluster
+### 4.4  Lancer le cluster
 
 Cette partie est Simple, dans le noeud de master:
 
@@ -321,7 +337,9 @@ Le lien de Web est : **ip_master:8080** , si le cluster mache bien, il ne peut p
 
 Pour le mode HA, Il faut installer Zookeeper(Zk). La fonction de Zk est pour assurer la continuité d'une tâche, c'est-à-dire que, quand une une noeud est tombé, le deuxieme master copiera et continuer la tâche. En général, dans ce mode,  il utilise un noeud de woker comme master alternative. Donc , il faut choisir au moins de 3 machines afin de réaliser la focntion de Zk(**2 master** et **1 woker**)
 
-#### 5.1 Installer Zookeeper
+
+
+### 5.1 Installer Zookeeper
 
 Dans notre projet, on a installé **Zookeeper_3.5.6** sur 1 Master et 2 Workers. Vous pouvez chercher la version compatible avec vos logiciels sur le [site](http://archive.apache.org/dist/zookeeper) . Le command est suivant:
 
@@ -331,7 +349,7 @@ wget http://archive.apache.org/dist/zookeeper/zookeeper-3.5.6/apache-zookeeper-3
 
 
 
-#### 5.2 Configurer Zookeeper
+### 5.2 Configurer Zookeeper
 
 1. Dans Zookeeper, il ne crée pas automatiquement des fichiers qui stockent des données et des logs,il faut créer:
 
@@ -383,7 +401,7 @@ Attention, l'ordre de server doit être pareille que celui dans fichier (**slave
 
 
 
-#### 5.3 Reconfigurer ***Spark-env.sh***
+### 5.3 Reconfigurer ***Spark-env.sh***
 
 Une fois en fini, il faut reconfigurer la fichier (**Spark-env.sh**). Commenter la définition de Ip adresse de master, et ajouter  des lignes:
 
@@ -405,7 +423,7 @@ Dans notre projet, on a rencontré le problème de porte, c'est pourquoi qu'on a
 
 
 
-#### 5.4 Lancer cluster
+###  5.4 Lancer cluster
 
 Lancement est un peu différent que celui dans mode standalone, c'est **obligé** de **démarrer Zk tout d'board** (en l'ordre de configuration). Suivant,dans le noeud **master** (le premier dans **slaves**):
 
@@ -426,7 +444,7 @@ Le lien de l'interface sera **ip_master:38080** pour master (**ip_worker:38081**
 Ci-desous sont des photos de l'interface de master spark. Le noeud en travail affiche le statut : ALIVE, le noeud en alternative est en STANDBY.
 
 | <img title="" src="alive.png" alt="这是图片的描述" style="zoom:33%;"> | <img title="" src="standby.png" alt="这是图片的描述" style="zoom:50%;"> |
-|:------------------------------------------------------------------------------------------:|:----------------------------------------------------------------:|
+|:--------------------------------------------------------------:|:----------------------------------------------------------------:|
 
   ****
 

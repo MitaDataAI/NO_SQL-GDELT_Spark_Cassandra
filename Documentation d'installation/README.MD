@@ -12,7 +12,7 @@ La configuration de notre projet nécessite de configurer sur le server de l'éc
   
   
 
-Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé compatible. On a installé **3 Zookeepers** sur **1 master** et **2 workers** pour assurer la résilience de nos travailles 
+Dans notre architecture, on décide d'utiliser logiciels: **Spark 2.3.2** et **Cassandra 3.11.3** ce qu'n a trouvé compatible. On a installé **3 Zookeepers** sur **2 masters** et **1 worker** pour assurer la résilience de nos travailles 
 
 
 
@@ -194,23 +194,37 @@ done
 
 ```
 
+#### 3.3  Vérification de réussite
 
+Lancer cassandra dans des machines:
+
+```bash
+cd /home/ubuntu/apache-cassandra-3.11.3 && bin/cassandra
+```
+
+Pour voir des nodes de cluster, le code suivant:
+
+```bash
+nodetool -h ::FFFF:127.0.0.1 status #(soit: nodetool status)
+```
 
 ****
 
 <h2 align="left">4.Installation et configuration de Spark</h2>
 
- Un rappel, les étapes suivant pour réaliser la fonction cluster :
+Spark propose aux utilisateurs deux mode de Cluster qui deployé indépendant : **Standalone** et **HA**(High availability) 
+
+Dans cette partie, il s'agit de configuration sur le mode **Standalone** ,le deuxième sera présenté dans configuration de Zookeeper.
+
+Un rappel, les étapes suivant pour réaliser la fonction cluster :
 
 1. Installer Apache-SparK sur les Masters et Workers
 
-2. Configurer le fichier **spark-env.sh**
+2. Configurer des fichiers
 
-3. Configurer le fichier **spark-default.conf**
+3. Ajouter les dépendances pour connecter Spark et Cassandra
 
-4. Ajouter les dépendances pour connecter Spark et Cassandra
-
-5. Lancer les Masters et les Workers
+4. Lancer le cluster
 
 #### 4.1 Installer Spark
 
@@ -227,69 +241,195 @@ export SPARK_HOME=/home/ubuntu/spark-2.3.2-bin-hadoop2.7
 export PATH=$PATH:$SPARK_HOME/bin
 ```
 
-#### 4.2 Configurer le fichier *<u>spark-env.sh</u>*
+#### 4.2 Configurer des fichiers.
 
-Accéder au dossier(**/home/ubuntu/spark-2.3.2-bin-hadoop2.7/conf**), Copier `spark-env.sh.template` et `spark-defaults.conf.template` en `spark-env.sh` et `spark-defaults.conf` . 
+Accéder au dossier(**/home/ubuntu/spark-2.3.2-bin-hadoop2.7/conf**), Copier `spark-env.sh.template`,`slaves.template` et `spark-defaults.conf.template` en  `spark-env.sh` ,`slaves`  et  `spark-defaults.conf` . 
 
 ```bash
 cd /home/ubunut/spark-2.3.2-bin-hadoop2.7/conf && cp spark-env.sh.template spark-env.sh && cp spark-defaults.conf.template spark-defaults.conf
 ```
 
-Sur masters:
+Dans fichier de **spark-env.sh** :
 
 ```bash
-export SPARK_LOCAL_IP=tp-hadoop-21 
-export SPARK_MASTER_HOST=tp-hadoop-21 
-export SPARK_MASTER_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=tp-hadoop-17:2181,tp-hadoop-18:2182,tp-hadoop-20:2183"
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+export SPARK_MASTER_HOST=tp-hadoop-21
+export SPARK_MASTER_PORT=7077
 ```
 
-Sur workers:
+**JAVA_HOME** : le chemin de JAVA
+
+**SPARK_MASTER_HOST**: Ip adresse de master de cluster
+
+**SPARK_MASTER_PORT**: Porte de master
+
+
+
+Dans fichier de **slaves**:
 
 ```bash
-export SPARK_LOCAL_IP=ip de worker
-export SPARK_MASTER_HOST=IPs de masters
+tp-hadoop-21 #master
+tp-hadoop-22 #slaves
+tp-hadoop-20
+tp-hadoop-17 ... 
 ```
 
+Il faut faire l'attention de l'ordre des IPs de cluster, le premier toujours est le master.
 
 
-#### 4.3 Configurer le fichier *<u>spark-defaults.conf</u>*
 
-Sur Masters:
+Dans fichier de **spark-defaults.conf** :
 
 ```bash
-spark.master                        spark://tp-hadoop-21:7077,tp-hadoop-22:7077
 spark.jars                          /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars/spark-cassandra-connector_2.11-2.4.0.jar
 spark.cassandra.connection.host     tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24
-spark.deploy.recoveryMode           ZOOKEEPER
-spark.deploy.zookeeper.url          tp-hadoop-22:2181,tp-hadoop-18:2182,tp-hadoop-20:2183
 ```
 
-Sur Workers:
+**spark.jars** : Chemin de stockage de librairie de spark-cassandra connector 
 
-```bash
-spark.master                        spark://tp-hadoop-21:7077,tp-hadoop-22:7077
-spark.jars                          /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars/spark-cassandra-connector_2.11-2.4.0.jar
-spark.cassandra.connection.host     tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24
-```
-
-On peut résumer:
-
-- `spark.master` : spark://PRIVATE_DNS_MASTER1:7077,PRIVATE_DNS_MASTER2:7077
-
-- `spark.jars` : spark-cassandra-connector_2.11-2.4.0
-
-- `spark.cassandra.connection.host` : IPs de workers
-
-Pour réaliser la résilience de système, il faut ajouter Deux lignes dans fichier de master. C'est pour quand un noeud de master est mort, le système va choisir automatiquement le deuxième masters à continuer de faire des tâches.
+**spark.cassandra.connection.host** : Ips de cassandra cluster, c'est pour conecter cassandra automatiquement.
 
 
 
-#### 4.4 Installer Spark-cassandra-connector
+Quand avoir fini des configurations dans une machine, on peut copier et coller dans des autres machines.
 
 
+
+#### 4.3 Installer Spark-cassandra-connector
+
+Cette librairie est pour la connexion entre Spark et Cassandra.
 
 ```bash
 cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars && wget https://repo1.maven.org/maven2/com/twitter/jsr166e/1.1.0/jsr166e-1.1.0.jar && wget https://repo1.maven.org/maven2/com/datastax/spark/spark-cassandra-connector_2.11/2.4.0/spark-cassandra-connector_2.11-2.4.0.jar
 ```
+
+
+
+#### 4.4  Lancer le cluster
+
+Cette partie est Simple, dans le noeud de master:
+
+```bash
+cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/sbin && ./start-all.sh
+```
+
+Le lien de Web est : **ip_master:8080** , si le cluster mache bien, il ne peut pas afficher interface, c'est  peut-être le problème porte(**corrigé sur spark-env.sh**).
+
+****
+
+<h2 align="left">5.Installation et configuration de Zookeeper</h2>
+
+Pour le mode HA, Il faut installer Zookeeper(Zk). La fonction de Zk est pour assurer la continuité d'une tâche, c'est-à-dire que, quand une une noeud est tombé, le deuxieme master copiera et continuer la tâche. En général, dans ce mode,  il utilise un noeud de woker comme master alternative. Donc , il faut choisir au moins de 3 machines afin de réaliser la focntion de Zk(**2 master** et **1 woker**)
+
+#### 5.1 Installer Zookeeper
+
+Dans notre projet, on a installé **Zookeeper_3.5.6** sur 1 Master et 2 Workers. Vous pouvez chercher la version compatible avec vos logiciels sur le [site](http://archive.apache.org/dist/zookeeper) . Le command est suivant:
+
+```bash
+wget http://archive.apache.org/dist/zookeeper/zookeeper-3.5.6/apache-zookeeper-3.5.6-bin.tar.gz && tar -xzvf apache-zookeeper-3.5.6-bin.tar.gz && rm apache-zookeeper-3.5.6-bin.tar.gz
+```
+
+
+
+#### 5.2 Configurer Zookeeper
+
+1. Dans Zookeeper, il ne crée pas automatiquement des fichiers qui stockent des données et des logs,il faut créer:
+
+```bash
+cd /home/ubuntu/ && mv apache-zookeeper-3.5.6-bin/zookeeper_X 
+```
+
+```bash
+cd /home/ubuntu/zookeeper_X && mkdir data && mkdir logs
+```
+
+**zookeeper_X** est pour éviter la confusion pendant la configuration suite.
+
+
+
+   2. Créer un fichier **myid** qui contenant un digit correspondant au numéro de série du zookeeper.  Sil le nom de fichier **zookeeper_X** est zookeeper_1,  ce numéro est 1.
+
+```bash
+cd /home/ubuntu/zookeeper_X/data && nano myid
+```
+
+
+
+   3.Configurer fichier **zoo.cfg** . Accéder à fichier (**/home/ubuntu/zookeeper_X/conf**):
+
+```bash
+cp zoo_sample.cfg zoo.cfg && nano zoo.cfg
+```
+
+Dans fichier **zoo.cfg**, il faut modifier des lignes:
+
+- **datadir**  : chemin de data dans zookeeper_X;
+
+- **clientPort** : 218X, ici, le même numéo de **zookeeper_X** (par default 2181, pouvoir ne modifier:);
+
+- des lignes de Servers: **server.1**,**server.2**,**server.3**...
+
+C'est la configuration d'un fichier:
+
+```bash
+dataDir=/export/data/zookeeper_x/zkdata
+clientPort=2181
+server.1=ip_master:2891:3881
+server.2=ip_master_alternative:2892:3882
+server.3=ip_slave1:2893:3883
+```
+
+Attention, l'ordre de server doit être pareille que celui dans fichier (**slaves**). 
+
+
+
+#### 5.3 Reconfigurer ***Spark-env.sh***
+
+Une fois en fini, il faut reconfigurer la fichier (**Spark-env.sh**). Commenter la définition de Ip adresse de master, et ajouter  des lignes:
+
+```bash
+export SPARK_MASTER_WEBUI_PORT=38080
+export SPARK_WORKER_WEBUI_PORT=38081
+export SPARK_DAEMON_JAVA_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=tp-hadoop-21:2181,tp-hadoop-22:2182,tp-hadoop-20:2183 -Dspark.deploy.zookeeper.dir=/spark"
+```
+
+**Dspark.deploy.recoveryMode** : Configurer Zookeeper pour le mode alternatif
+
+**Dspark.deploy.zookeeper.url** : Chemin de zookeeper servers(ip:clientport dans fichier de **zoo.cfg**)
+
+**Dspark.deploy.zookeeper.dir** : Fichiers et répertoires contenant des informations sur les métadonnées des clusters
+
+
+
+Dans notre projet, on a rencontré le problème de porte, c'est pourquoi qu'on a ajouté des lignes de porte. Ensuite, faire la même chose dans les autres machines.
+
+
+
+#### 5.4 Lancer cluster
+
+Lancement est un peu différent que celui dans mode standalone, c'est **obligé** de **démarrer Zk tout d'board** (en l'ordre de configuration). Suivant,dans le noeud **master** (le premier dans **slaves**):
+
+```bash
+cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/sbin && ./start-all.sh
+```
+
+Dans noeud de **master alternative**:
+
+```bash
+cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/sbin && ./start-master.sh
+```
+
+Le lien de l'interface sera **ip_master:38080** pour master (**ip_worker:38081** pour worker). Pour le test, vous pouvez tomber le noeud de master ce qui en travail. Il faut attendre 30s ou 1min. Après, les tâches sont transmises en deuxième noeud.
+
+
+
+Ci-desous sont des photos de l'interface de master spark. Le noeud en travail affiche le statut : ALIVE, le noeud en alternative est en STANDBY.
+
+| <img src="file:///C:/Users/xin/Pictures/Typedown/29c63ab7-f899-4b01-9e68-b67008e1d19a.png" title="" alt="29c63ab7-f899-4b01-9e68-b67008e1d19a" style="zoom:50%;"> | <img title="" src="file:///C:/Users/xin/Pictures/Typedown/c067a4b0-ea04-4baf-af1f-e52678ebcadd.png" alt="c067a4b0-ea04-4baf-af1f-e52678ebcadd" style="zoom:33%;" data-align="right"> |
+| -----------------------------------------------------------------------------------------------------------------------------------------------------------------:| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+
+  ****
+
+<h2 align="left">6.Installation et configuration de Zeppelin</h2>
 
 

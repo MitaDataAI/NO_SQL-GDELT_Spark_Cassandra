@@ -116,8 +116,6 @@ sudo apt install python
 
 <h2 align="left">3.Installation et configuration de Cassandra</h2>
 
-
-
 ### 3.1 Installer Cassandra
 
 Encore une fois, un rappel:vous devez vous assurer de la compatibilité des logiciels avant de les installer, faute de quoi vous passerez beaucoup de temps à chercher une solution au problème. Pour nous,  on a choisi **Cassandra 3.11.3** , dans le site de [site Apache Cassandra](http://www.apache.org/dyn/closer.lua/cassandra/3.11.3/) :
@@ -237,8 +235,8 @@ Un rappel, les étapes suivant pour réaliser la fonction cluster :
 3. Ajouter les dépendances pour connecter Spark et Cassandra
 
 4. Lancer le cluster
-
-
+   
+   
 
 ### 4.1 Installer Spark
 
@@ -329,7 +327,7 @@ Cette partie est Simple, dans le noeud de master:
 cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/sbin && ./start-all.sh
 ```
 
-Le lien de Web est : **ip_master:8080** , si le cluster mache bien, il ne peut pas afficher interface, c'est  peut-être le problème porte(**corrigé sur spark-env.sh**).
+Le lien de Web est : **ip_master:8080** , si le cluster marche bien, il ne peut pas afficher interface, c'est  peut-être le problème porte(**corrigé sur spark-env.sh**).
 
 ****
 
@@ -423,7 +421,7 @@ Dans notre projet, on a rencontré le problème de porte, c'est pourquoi qu'on a
 
 
 
-###  5.4 Lancer cluster
+### 5.4 Lancer cluster
 
 Lancement est un peu différent que celui dans mode standalone, c'est **obligé** de **démarrer Zk tout d'board** (en l'ordre de configuration). Suivant,dans le noeud **master** (le premier dans **slaves**):
 

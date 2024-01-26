@@ -425,11 +425,9 @@ Le lien de l'interface sera **ip_master:38080** pour master (**ip_worker:38081**
 
 Ci-desous sont des photos de l'interface de master spark. Le noeud en travail affiche le statut : ALIVE, le noeud en alternative est en STANDBY.
 
-| <img src="file:///C:/Users/xin/Pictures/Typedown/29c63ab7-f899-4b01-9e68-b67008e1d19a.png" title="" alt="29c63ab7-f899-4b01-9e68-b67008e1d19a" style="zoom:50%;"> | <img title="" src="file:///C:/Users/xin/Pictures/Typedown/c067a4b0-ea04-4baf-af1f-e52678ebcadd.png" alt="c067a4b0-ea04-4baf-af1f-e52678ebcadd" style="zoom:33%;" data-align="right"> |
-| -----------------------------------------------------------------------------------------------------------------------------------------------------------------:| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| <img title="" src="alive.png" alt="这是图片的描述" style="zoom:33%;"> | <img title="" src="standby.png" alt="这是图片的描述" style="zoom:50%;"> |
+|:------------------------------------------------------------------------------------------:|:----------------------------------------------------------------:|
 
   ****
 
 <h2 align="left">6.Installation et configuration de Zeppelin</h2>
-
-

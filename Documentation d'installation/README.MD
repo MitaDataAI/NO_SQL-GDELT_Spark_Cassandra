@@ -269,6 +269,7 @@ Dans fichier de **spark-env.sh** :
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
 export SPARK_MASTER_HOST=tp-hadoop-21
 export SPARK_MASTER_PORT=7077
+export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=file:///home/ubuntu/spark-> 
 ```
 
 **JAVA_HOME** : le chemin de JAVA
@@ -276,6 +277,8 @@ export SPARK_MASTER_PORT=7077
 **SPARK_MASTER_HOST**: Ip adresse de master de cluster
 
 **SPARK_MASTER_PORT**: Porte de master
+
+**SPARK_HISTORY_OPTS**: Pour voir des histoire de logs
 
 
 
@@ -297,11 +300,19 @@ Dans fichier de **spark-defaults.conf** :
 ```bash
 spark.jars                          /home/ubuntu/spark-2.3.2-bin-hadoop2.7/jars/spark-cassandra-connector_2.11-2.4.0.jar
 spark.cassandra.connection.host     tp-hadoop-17,tp-hadoop-18,tp-hadoop-19,tp-hadoop-20,tp-hadoop-23,tp-hadoop-24
+
+spark.eventLog.enabled           true 
+spark.eventLog.dir               file:///home/ubuntu/spark-2.3.2-bin-hadoop2.7/spark-events 
+spark.history.fs.logDirectory    file:///home/ubuntu/spark-2.3.2-bin-hadoop2.7/spark-events  
 ```
 
 **spark.jars** : Chemin de stockage de librairie de spark-cassandra connector 
 
 **spark.cassandra.connection.host** : Ips de cassandra cluster, c'est pour conecter cassandra automatiquement.
+
+**spark.eventLog.enabled**: Pour stoquer des logs
+
+**spark.eventLog.dir** et **spark.history.fs.logDirectory** : des chemin pour des logs
 
 
 
@@ -496,7 +507,7 @@ Dans le fichier **zeppelin-site.xml** :
 
 Il faut assurer l'ip de server et la porte est pareil que celui dans **zeppelin-env.sh** .
 
- 
+
 
 ### 6.3 Lancer Zeppelin
 
@@ -509,5 +520,3 @@ Pour lancer ce logiciel, accéder à fichier(**/home/ubuntu/zeppelin-0.8.2-bin-a
 ```
 
 Le lien de site est server:port(tp-hadoop-22:9090). 
-
-

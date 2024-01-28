@@ -447,3 +447,67 @@ Ci-desous sont des photos de l'interface de master spark. Le noeud en travail af
   ****
 
 <h2 align="left">6.Installation et configuration de Zeppelin</h2>
+
+### 6.1 Installer Zeppelin
+
+On télécharge l'archive, la décompresse et la supprime en étant dans le (**/home/ubuntu**) :
+
+```bash
+wget https://www-eu.apache.org/dist/zeppelin/zeppelin-0.8.2/zeppelin-0.8.2-bin-all.tgz && tar -xzvf zeppelin-0.8.2-bin-all.tgz && rm zeppelin-0.8.2-bin-all.tgz 
+```
+
+
+
+### 6.2 Configuratrion de  Zeppelin
+
+Dans Zeppelin, il n'y a pas beaucoup de chose à configurer, seulement fichier(**zeppelin-env.sh** , **zeppelin-site.xml**)
+
+```bash
+cd zeppelin-0.8.2-bin-all/conf
+cp zeppelin-env.sh.template zeppelin-env.sh && cp zeppelin-site.xml.template zeppelin-site.xml
+```
+
+
+
+Dans le fichier **zeppelin-env.sh** :
+
+```bash
+export ZEPPELIN_PORT=9090                          # port number to listen (default 8080) 
+```
+
+C'est  pour éviter de l'occupation de porte.
+
+
+
+Dans le fichier **zeppelin-site.xml** :
+
+```bash
+<property>   
+        <name>zeppelin.server.addr</name>   
+        <value>tp-hadoop-22</value>   
+        <description>Server binding address</description> 
+</property>  
+<property>   
+        <name>zeppelin.server.port</name>   
+        <value>9090</value>   
+        <description>Server port.</description> 
+</property>  
+```
+
+Il faut assurer l'ip de server et la porte est pareil que celui dans **zeppelin-env.sh** .
+
+ 
+
+### 6.3 Lancer Zeppelin
+
+
+
+Pour lancer ce logiciel, accéder à fichier(**/home/ubuntu/zeppelin-0.8.2-bin-all/bin**)  :
+
+```bash
+./zeppelin-daemon.sh start(/stop)
+```
+
+Le lien de site est server:port(tp-hadoop-22:9090). 
+
+

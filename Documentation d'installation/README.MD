@@ -138,9 +138,9 @@ export PATH="$PATH:/home/ubuntu/apache-cassandra-3.11.3/bin"
 
 
 
-### 3.2 Configurer cassandra fichier <u>Cassandra.ymal</u>
+### 3.2 Configurer cassandra fichier <u>Cassandra.yaml</u>
 
-  Pour activer la mise en cluster entre les nœuds, il faut configurer fichier(**<u>Cassandra.ymal</u>**). Dans le fichier, nous devons modifier des lignes suivant:
+  Pour activer la mise en cluster entre les nœuds, il faut configurer fichier(**<u>Cassandra.yaml</u>**). Dans le fichier, nous devons modifier des lignes suivant:
 
 - **cluster_name** : nom de cluster(par defauct "Test Cluster")
 
@@ -278,7 +278,7 @@ export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logD
 
 **SPARK_MASTER_PORT**: Porte de master
 
-**SPARK_HISTORY_OPTS**: Pour voir des histoire de logs
+**SPARK_HISTORY_OPTS**: Configurer la porte de **server d'histoire** et chemin de stockage pour voir des histoire de logs,
 
 
 
@@ -310,9 +310,9 @@ spark.history.fs.logDirectory    file:///home/ubuntu/spark-2.3.2-bin-hadoop2.7/s
 
 **spark.cassandra.connection.host** : Ips de cassandra cluster, c'est pour conecter cassandra automatiquement.
 
-**spark.eventLog.enabled**: Pour stoquer des logs
+**spark.eventLog.enabled**: Pour stocker des logs
 
-**spark.eventLog.dir** et **spark.history.fs.logDirectory** : des chemin pour des logs
+**spark.eventLog.dir** et **spark.history.fs.logDirectory** : Les chemin pour des logs
 
 
 
@@ -338,7 +338,7 @@ Cette partie est Simple, dans le noeud de master:
 cd /home/ubuntu/spark-2.3.2-bin-hadoop2.7/sbin && ./start-all.sh
 ```
 
-Le lien de Web est : **ip_master:8080** , si le cluster marche bien, il ne peut pas afficher interface, c'est  peut-être le problème porte(**corrigé sur spark-env.sh**).
+Le lien de Web est : **ip_master:8080** , si le cluster marche bien, il ne peut pas afficher interface, c'est  peut-être le problème porte(**corrigé sur spark-env.sh**). Le lien pour voir des histoire est **ip_master:porte de server d'histoire** 
 
 ****
 
@@ -412,7 +412,7 @@ Attention, l'ordre de server doit être pareille que celui dans fichier (**slave
 
 ### 5.3 Reconfigurer ***Spark-env.sh***
 
-Une fois en fini, il faut reconfigurer la fichier (**Spark-env.sh**). Commenter la définition de Ip adresse de master, et ajouter  des lignes:
+Une fois en fini, il faut reconfigurer la fichier (**Spark-env.sh**). Commenter la définition de Ip adresse de master, et ajouter des lignes:
 
 ```bash
 export SPARK_MASTER_WEBUI_PORT=38080
@@ -520,3 +520,5 @@ Pour lancer ce logiciel, accéder à fichier(**/home/ubuntu/zeppelin-0.8.2-bin-a
 ```
 
 Le lien de site est server:port(tp-hadoop-22:9090). 
+
+

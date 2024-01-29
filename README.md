@@ -1,4 +1,4 @@
-<img title="" src="photo.jpeg" alt="loading-ag-54" style="zoom:200%;" data-align="center">
+<img src="photo.png" title="" alt="be0b0809-f14d-4d45-8fb3-c76a9b80f2f2" style="zoom:200%;">
 
 ****
 
@@ -14,5 +14,3 @@
 | Youssef ELBRINI | [Youssef](https://github.com/y0ussefElbrini) |
 | Xin XU          | [Xin](https://github.com/BGD23-xin)          |
 | Aurelien RAULO  | [Aurelien](https://github.com/Aurelienraulo) |
-
-

@@ -1,4 +1,4 @@
-<img src="photo.png" title="" alt="be0b0809-f14d-4d45-8fb3-c76a9b80f2f2" style="zoom:200%;">
+<img src="photo.png" title="" alt="be0b0809-f14d-4d45-8fb3-c76a9b80f2f2" data-align="center" style="zoom:200%;">
 
 ****
 

@@ -146,20 +146,14 @@ cd zeppelin-0.8.2-bin-all/bin && ./zeppelin-daemon.sh start
 
 ---
 
-## 🧪 Vérification finale
-
+## Vérification finale
 - Accès Spark UI : `http://<master-ip>:8080` (ou `38080` en mode HA)
 - Accès Zeppelin : `http://<zeppelin-ip>:9090`
 - Cassandra : vérification des nœuds via `nodetool status`
 ---
 
-## ✅ Résumé
-
-- ✅ Infrastructure **HA** avec Spark + Zookeeper
-- ✅ Stockage distribué et résilient via Cassandra
-- ✅ Requêtes interactives via Zeppelin
-- ✅ Scripts d’installation et configuration automatisés
-
+# Plus d'informations d'installations 
+- Accès Spark UI : `http://<master-ip>:8080` (ou `38080` en mode HA)
 
 
 

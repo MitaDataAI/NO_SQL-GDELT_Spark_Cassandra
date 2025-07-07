@@ -34,12 +34,6 @@ On se concentre sur deux bases de données :
      - Identification des sujets et personnalités abordés
      - Calcul du ton moyen des articles
 ---
-****
-
-
-
-<img title="" src="objectif.png" alt="96741f3f-6a94-4881-afc8-8fe3203cbdd1" data-align="center" style="zoom:200%;">
-
 ***
 # Objectif du point de vue informatique 
 - Mettre en œuvre une architecture Big Data distribuée, résiliente et performante.

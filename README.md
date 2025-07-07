@@ -1,4 +1,4 @@
-<img title="" src="photo.png" alt="" style="zoom:200%;" data-align="center">
+![image](https://github.com/user-attachments/assets/44604982-9484-47f5-bf76-42d21fbb1650)
 
 ****
 

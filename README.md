@@ -7,6 +7,7 @@ Il fournit :
 - Une base de connaissance sémantique (personnes, lieux, thèmes, émotions) ; 
 - Des indicateurs de tonalité et sentiment ; 
 
+****
 <img title="" src="objectif.png" alt="96741f3f-6a94-4881-afc8-8fe3203cbdd1" data-align="center" style="zoom:200%;">
 
 ***

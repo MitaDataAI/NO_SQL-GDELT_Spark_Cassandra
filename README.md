@@ -6,11 +6,3 @@
 
 ***
 
-### Team Members
-
-| Name            | Github                                       |
-| --------------- | -------------------------------------------- |
-| Yassine CHAFAI  | [yassine](https://github.com/ychafai93)      |
-| Youssef ELBRINI | [Youssef](https://github.com/y0ussefElbrini) |
-| Xin XU          | [Xin](https://github.com/BGD23-xin)          |
-| Aurelien RAULO  | [Aurelien](https://github.com/Aurelienraulo) |
